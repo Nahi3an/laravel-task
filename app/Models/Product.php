@@ -19,8 +19,18 @@ class Product extends Model
         'updated_by',
 
     ];
+    public static function boot()
+    {
+        parent::boot();
 
+        static::creating(function ($product) {
+            $product->slug = Str::slug($product->name) . '-' . Str::random(6);
+        });
 
+        static::updating(function ($product) {
+            $product->slug = Str::slug($product->name) . '-' . Str::random(6);
+        });
+    }
 
     public function category()
     {
