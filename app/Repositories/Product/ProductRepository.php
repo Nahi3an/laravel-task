@@ -3,6 +3,7 @@
 namespace App\Repositories\Product;
 
 use App\Models\Product;
+use App\Jobs\NewProductEmailJob;
 use Illuminate\Support\Facades\DB;
 use App\Exceptions\StoreResourceFailedException;
 use App\Exceptions\DeleteResourceFailedException;
@@ -56,7 +57,7 @@ class ProductRepository
                     'created_by' => 1
                 ]
             );
-
+            // NewProductEmailJob::dispatch($model);
             return $model;
         } catch (\Throwable $th) {
 
