@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers\Product;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Product\ProductStoreRequest;
-use App\Repositories\Category\CategoryRepository;
-use App\Repositories\Product\ProductRepository;
+use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Exports\ProductExport;
+use App\Imports\ProductImport;
+use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Repositories\Product\ProductRepository;
+use App\Repositories\Category\CategoryRepository;
+use App\Http\Requests\Product\ProductStoreRequest;
+
 
 class ProductController extends Controller
 {
@@ -93,5 +98,30 @@ class ProductController extends Controller
     {
         $this->repository->delete($id);
         return redirect()->route('products.index')->with('message', 'Product Deleted Successfully!');
+    }
+
+    public function purchaseProduct(Request $request)
+    {
+
+        $product = $this->repository->findById($request->product_id);
+        event(new \App\Events\ProductPurchased($product));
+        return redirect()->route('products.index')->with('message', 'Product purchased successfully.');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:csv,xls,xlsx',
+        ]);
+
+        Excel::import(new ProductImport, $request->file('file'));
+
+        return redirect()->route('products.index')->with('message', 'Products imported successfully.');
+    }
+
+    public function export()
+    {
+        return Excel::download(new ProductExport, 'products.xlsx');
+        return redirect()->route('products.index')->with('message', 'Product exported successfully.');
     }
 }

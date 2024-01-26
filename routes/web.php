@@ -18,4 +18,13 @@ use Illuminate\Support\Facades\Route;
 require __DIR__ . '/category.php';
 //product route
 require __DIR__ . '/product.php';
-Route::get('/', [ProductController::class, 'index']);
+Route::get('/', function () {
+    return view('welcome');
+});
+Route::get('/access-error', function () {
+    return view('auth.access-error');
+})->name('access.error');
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
