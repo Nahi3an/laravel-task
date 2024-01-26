@@ -59,7 +59,7 @@ Before you begin, ensure you have the following installed on your machine:
 6. Copy the .env.example file to .env and configure your environment variables
 
    ```bash
-   npm install
+   cp .env.example .env
 
    ```
 
@@ -70,7 +70,14 @@ Before you begin, ensure you have the following installed on your machine:
 
    ```
 
-8. Generate the application key:
+8. Run migrations and seed the database:
+
    ```bash
    php artisan migrate:fresh --seed
+   ```
+
+9. Start the server:
+   ```bash
+   php artisan serve
+   npm run dev
    ```
